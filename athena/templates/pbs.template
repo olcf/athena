@@ -1,0 +1,15 @@
+#!/bin/bash -l
+#PBS -A $${account}
+#PBS -q $${queue}
+#PBS -l walltime=$${walltime},nodes=$${nnodes}
+#PBS -N $${job_name}
+#PBS -j oe
+
+$${pre_rocket}
+
+cd $${launch_dir}
+
+$${rocket_launch}
+
+$${post_rocket}
+

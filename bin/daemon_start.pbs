@@ -1,0 +1,16 @@
+#!/bin/bash -l
+#PBS -A stf007
+#PBS -q batch
+#PBS -l walltime=01:00:00,nodes=0
+#PBS -N fireworks_daemon
+#PBS -j oe
+
+cd /ccs/home/belhorn/fireworks/athena/run
+qsub -W depend=afterok:$PBS_JOBID ./../bin/daemon_resub.pbs
+
+cd $MEMBERWORK/stf007/
+module load python python_fireworks python_setuptools
+PYTHONPATH=/ccs/home/belhorn/fireworks/athena/athena/:$PYTHONPATH
+
+/ccs/home/belhorn/fireworks/athena/athena/example.py --reset -pbu
+

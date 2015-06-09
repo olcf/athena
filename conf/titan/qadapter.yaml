@@ -1,0 +1,14 @@
+_fw_name: CommonAdapter
+_fw_q_type: PBS
+_fw_template_file: /ccs/home/belhorn/fireworks/athena/athena/templates/submit_titan.template
+rocket_launch: rlaunch -w /ccs/home/belhorn/fireworks/athena/conf/titan/worker.yaml -l /ccs/home/belhorn/fireworks/athena/conf/titan/lpad.yaml singleshot
+nnodes: 0
+ppnode: 0
+walltime: '00:00:45'
+queue: batch
+account: stf007
+job_name: unnamed_job
+logdir: /ccs/home/belhorn/fireworks/athena/logs
+pre_rocket: module load python python_fireworks python_setuptools
+post_rocket: null
+

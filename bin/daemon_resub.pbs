@@ -1,0 +1,39 @@
+#!/bin/bash -l
+#PBS -A stf007
+#PBS -q batch
+#PBS -l walltime=01:00:00,nodes=0
+#PBS -N fireworks_daemon
+#PBS -j oe
+
+# The clock is ticking...
+# Exit two minutes before PBS squashes the job. 
+CLOCK_LIMIT=$(($SECONDS+3480))
+
+athena=/ccs/home/belhorn/fireworks/athena
+cd $athena/run
+qsub -W depend=afterok:$PBS_JOBID $athena/bin/daemon_resub.pbs
+#qsub -W depend=afternotok:$PBS_JOBID $athena/bin/daemon_cleanup.pbs
+
+
+launch_dir=$MEMBERWORK/stf007/
+cd $launch_dir
+module load python python_fireworks python_setuptools
+PYTHONPATH=/ccs/home/belhorn/fireworks/athena/athena/:$PYTHONPATH
+
+#./$athena/athena/example.py -d
+
+conf=$athena/conf/titan
+worker=$conf/worker.yaml
+lpad=$conf/lpad.yaml
+qadapter=$conf/qadapter.yaml
+
+log_dir=$launch_dir/log
+out_dir=$launch_dir/out
+
+while [ $SECONDS -lt $CLOCK_LIMIT ]; do
+  qlaunch -l $lpad -q $qadapter -w $worker --launch_dir $out_dir --logdir $log_dir -r rapidfire
+  sleep 5
+  lpad -l $lpad --logdir $athena/logs recover_offline
+  sleep 5
+done
+
